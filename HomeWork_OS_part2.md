@@ -1,25 +1,53 @@
 ## Задание
 
-1. На лекции вы познакомились с [node_exporter](https://github.com/prometheus/node_exporter/releases). В демонстрации его исполняемый файл запускался в background. Этого достаточно для демо, но не для настоящей production-системы, где процессы должны находиться под внешним управлением. Используя знания из лекции по systemd, создайте самостоятельно простой [unit-файл](https://www.freedesktop.org/software/systemd/man/systemd.service.html) для node_exporter:
+***1. На лекции вы познакомились с [node_exporter](https://github.com/prometheus/node_exporter/releases). В демонстрации его исполняемый файл запускался в background. Этого достаточно для демо, но не для настоящей production-системы, где процессы должны находиться под внешним управлением. Используя знания из лекции по systemd, создайте самостоятельно простой [unit-файл](https://www.freedesktop.org/software/systemd/man/systemd.service.html) для node_exporter:***
 
     * поместите его в автозагрузку;
     * предусмотрите возможность добавления опций к запускаемому процессу через внешний файл (посмотрите, например, на `systemctl cat cron`);
     * удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
 
-1. Изучите опции node_exporter и вывод `/metrics` по умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
+На странице копируем путь для скачивания актуальной версии node_exporter и распаковываем его:*
+
+`pat@Patefon:~$ wget https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz`
+
+`pat@Patefon:~$ tar xvfz node_exporter-1.5.0.linux-amd64.tar.gz`
+
+Для запуска демона node_exporter создадим системного пользователя node_exporter:
+
+`pat@Patefon:~$ useradd --no-create-home --shell /bin/false nodeusr`
+
+Создадим новый unit-файл и настроим его для node_exporter:
+
+![1](https://user-images.githubusercontent.com/75835363/224321985-dd64a05b-a066-44e7-ad53-abc033005c7b.png)
+
+![2](https://user-images.githubusercontent.com/75835363/224323000-b174e525-3bca-4dfa-b388-fd0252c30355.png)
+
+Добавим опции к запускаемому процессу через внешний файл
+
+![3](https://user-images.githubusercontent.com/75835363/224323899-67753f9b-43c6-4442-9da7-c346deb48ab0.png)
+![4](https://user-images.githubusercontent.com/75835363/224323932-a815598d-8694-4349-9ab8-1efb747d7dd2.png)
+
+Далее перечитываем директорию с юнит-файлами `systemctl daemon-reload`. Перед запуском сервиса необходимо проверить, что исполняемый файл лежит тут `/usr/bin/node_exporter` и файл конфигурации тут `/etc/default/node_exporter`. Запускаем сервис `systemctl start node_exporter` и добавляем сервис в автозагрузку при старте системы `systemctl enable node_exporter`.
+
+Проверяем статус сервиса node_exporter:
+
+![5](https://user-images.githubusercontent.com/75835363/224324644-ae2767a3-26c2-4194-95e4-ca3d5bfdd0b5.png)
+
+Для проверки работы сервиса перезагрузил машину командой `sudo reboot`. После перезагрузки сервис *node_exporter* был в статусе *active*.
+
+
+
+
+***1. Изучите опции node_exporter и вывод `/metrics` по умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.***
+
+
+
+
+
 
 1. Установите в свою виртуальную машину [Netdata](https://github.com/netdata/netdata). Воспользуйтесь [готовыми пакетами](https://packagecloud.io/netdata/netdata/install) для установки (`sudo apt install -y netdata`). 
    
-   После успешной установки:
-   
-    * в конфигурационном файле `/etc/netdata/netdata.conf` в секции [web] замените значение с localhost на `bind to = 0.0.0.0`;
-    * добавьте в Vagrantfile проброс порта Netdata на свой локальный компьютер и сделайте `vagrant reload`:
-
-    ```bash
-    config.vm.network "forwarded_port", guest: 19999, host: 19999
-    ```
-
-    После успешной перезагрузки в браузере на своём ПК (не в виртуальной машине) вы должны суметь зайти на `localhost:19999`. Ознакомьтесь с метриками, которые по умолчанию собираются Netdata, и с комментариями, которые даны к этим метрикам.
+![image](https://user-images.githubusercontent.com/75835363/224336428-faadf32b-455c-456d-9226-8f5246a35dd4.png)
 
 1. Можно ли по выводу `dmesg` понять, осознаёт ли ОС, что загружена не на настоящем оборудовании, а на системе виртуализации?
 
