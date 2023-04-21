@@ -91,21 +91,24 @@ pat@Patefon:/etc/apache2/sites-available$
  Устанавливаем сервер:
 
 
-apt install openssh-server
-systemctl start sshd.service
-systemctl enable sshd.service
+*apt install openssh-server*
+
+*systemctl start sshd.service*
+
+*systemctl enable ssh*
 
 
 
 Генерируем ключи:
 
-ssh-keygen
+*ssh-keygen*
 
  ![image](https://user-images.githubusercontent.com/75835363/233654906-4b7552fb-ee87-4540-9daa-0ee5be40e590.png)
 
  
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH-клиента так, чтобы вход на удалённый сервер осуществлялся по имени сервера.
 
+![image](https://user-images.githubusercontent.com/75835363/233663370-6c3a725e-15e8-4775-8e91-f829863cff73.png)
 
 
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
