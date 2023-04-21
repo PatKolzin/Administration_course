@@ -2,13 +2,6 @@
 
 
 
-
-### Дополнительные материалы для выполнения задания
-
-1. [SSL + Apache2](https://digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-20-04).
-
-------
-
 ## Задание
 
 1. Установите плагин Bitwarden для браузера. Зарегестрируйтесь и сохраните несколько паролей.
