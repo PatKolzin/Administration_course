@@ -77,12 +77,36 @@ pat@Patefon:/etc/apache2/sites-available$ curl -v -k https://localhost
 * Connection #0 to host localhost left intact
 pat@Patefon:/etc/apache2/sites-available$
 ```
+![image](https://user-images.githubusercontent.com/75835363/233653376-98fa554f-e34e-4242-b085-22ceb76a4be8.png)
+
 
 4. Проверьте на TLS-уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК и т. п.).
 
+![image](https://user-images.githubusercontent.com/75835363/233653512-50bb22a0-9195-411f-ad7b-e84b040a65e5.png)
+
+
+
 5. Установите на Ubuntu SSH-сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.
  
+ Устанавливаем сервер:
+
+
+apt install openssh-server
+systemctl start sshd.service
+systemctl enable sshd.service
+
+
+
+Генерируем ключи:
+
+ssh-keygen
+
+ ![image](https://user-images.githubusercontent.com/75835363/233654906-4b7552fb-ee87-4540-9daa-0ee5be40e590.png)
+
+ 
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH-клиента так, чтобы вход на удалённый сервер осуществлялся по имени сервера.
+
+
 
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
 
