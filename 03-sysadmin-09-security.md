@@ -13,7 +13,11 @@
 
 1. Установите плагин Bitwarden для браузера. Зарегестрируйтесь и сохраните несколько паролей.
 
+
+
 2. Установите Google Authenticator на мобильный телефон. Настройте вход в Bitwarden-акаунт через Google Authenticator OTP.
+
+
 
 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
 
@@ -112,6 +116,11 @@ pat@Patefon:/etc/apache2/sites-available$
 
 
 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
+
+![Screenshot 2023-04-21 175209](https://user-images.githubusercontent.com/75835363/233692158-55539978-1688-4220-9a21-19ea53b7a4c8.png)
+
+![image](https://user-images.githubusercontent.com/75835363/233692193-53b82cc2-e221-41b9-a8ea-19fc289fc0c0.png)
+
 
 *В качестве решения приложите: скриншоты, выполняемые команды, комментарии (при необходимости).*
 
