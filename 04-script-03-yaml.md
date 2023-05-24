@@ -52,54 +52,45 @@
 
 ### Ваш скрипт:
 
-```##!/usr/bin/env python3
-
-import socket as s
-import time as t
-import datetime as dt
+```import socket
+import time
 import json
 import yaml
 
-# VARS
-wait = 2 # интервал проверок в секундах
-serv = {'drive.google.com':'0.0.0.0', 'mail.google.com':'0.0.0.0', 'google.com':'0.0.0.0'}
+serv = {'drive.google.com': '0.0.0.0', 'mail.google.com': '0.0.0.0', 'google.com': '0.0.0.0'}
 
-print('*** start ***')
-print(serv)
-print('********************')
 
-while 1==1 : # бесконечный цикл
-  for host in serv:
-    ip = s.gethostbyname(host)
-    data = [{host : ip}]
-    if ip != serv[host]:
-      print(str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) +' [ERROR] ' + str(host) +' IP mistmatch: '+serv[host]+' '+ip)
-# json
-      with open(host+".json",'w') as jsonfile: 
-          json_data=json.dump(data,jsonfile)
-# yaml
-      with open(host+".yaml",'w') as yamlfile:
-          yaml_data= yaml.dump(data,yamlfile)  
-      serv[host]=ip
-  t.sleep(wait)
+while 1==1 :
+
+    for host in serv:
+        time.sleep(1)
+        ip = socket.gethostbyname(host)
+        data = [{host : ip}]
+        if ip != serv[host]:
+            print(' [ERROR] ' + str(host) +' IP mistmatch: '+serv[host]+' '+ip)
+        else:
+           print(str(host) + ' ' + ip)
+
+        with open(host+'.json', 'w') as json_file:
+             json_file.write(str(data))
+        with open(host+'.yaml', 'w') as yaml_file:
+             yaml_file.write(yaml.dump(data, indent=2, explicit_start=True, explicit_end=True))
+        serv[host]=ip
 
 
 ```
 
 ### Вывод скрипта при запуске во время тестирования:
 
+![image](https://github.com/PatKolzin/Administration_course/assets/75835363/ba059c07-fc63-4297-b0c8-5a509bc62f33)
 
 
 ### JSON-файл(ы), который(е) записал ваш скрипт:
 
-```json
-???
-```
+![image](https://github.com/PatKolzin/Administration_course/assets/75835363/83d32c96-2bdc-4741-be7a-accfabd34f35)
 
 ### YAML-файл(ы), который(е) записал ваш скрипт:
 
-```yaml
-???
-```
+![image](https://github.com/PatKolzin/Administration_course/assets/75835363/6812a3f9-02a2-4f51-a16e-a95ed1129398)
 
 ---
