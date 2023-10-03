@@ -1,0 +1,1 @@
+SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'my_some_database' AND TABLE_NAME = 'my_table';
