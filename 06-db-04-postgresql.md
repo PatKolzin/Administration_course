@@ -188,78 +188,61 @@ test_database=# select avg_width, attname from pg_stats where tablename='orders'
 
 Предложите SQL-транзакцию для проведения данной операции.
 
-По условиям граница orders_1 начинается со значения большего чем 499 по этой причине начальное value from будет 500
-для секции orders_2 значения должны быть меньше или раывно 499 по этой причине последнее значение бужет равно 500,
-верхние и нижние границы 
+## Ответ
 
-```bash
-test_database=# create table orders (id integer not null,title character varying(80) not null,price integer default 0) partition by range (price); 
-CREATE TABLE
-test_database=# create table orders_2 partition of orders for values from (0) to (500);
-CREATE TABLE
-test_database=# create table orders_1 partition of orders for values from (500) to (1000);
-CREATE TABLE
-test_database=# insert into orders (id, title, price) select * from orders_old;
-INSERT 0 8
-test_database=# select * from orders_1;
- id |       title        | price 
-----+--------------------+-------
-  2 | My little database |   500
-  6 | WAL never lies     |   900
-  8 | Dbiezdmin          |   501
-(3 rows)
-test_database=# select * from orders_2;
- id |        title         | price 
-----+----------------------+-------
-  1 | War and peace        |   100
-  3 | Adventure psql time  |   300
-  4 | Server gravity falls |   300
-  5 | Log gossips          |   123
-  7 | Me and my bash-pet   |   499
-(5 rows)
-test_database=# select * from orders;
- id |        title         | price 
-----+----------------------+-------
-  1 | War and peace        |   100
-  3 | Adventure psql time  |   300
-  4 | Server gravity falls |   300
-  5 | Log gossips          |   123
-  7 | Me and my bash-pet   |   499
-  2 | My little database   |   500
-  6 | WAL never lies       |   900
-  8 | Dbiezdmin            |   501
-(8 rows)
-test_database=# select * from orders_old ;
- id |        title         | price 
-----+----------------------+-------
-  1 | War and peace        |   100
-  2 | My little database   |   500
-  3 | Adventure psql time  |   300
-  4 | Server gravity falls |   300
-  5 | Log gossips          |   123
-  6 | WAL never lies       |   900
-  7 | Me and my bash-pet   |   499
-  8 | Dbiezdmin            |   501
-(8 rows)
+```commandline
+test_database=# BEGIN;
+
+CREATE TABLE orders_shard (
+    id integer NOT NULL,
+    title character varying(80) NOT NULL,
+    price integer DEFAULT 0
+)
+PARTITION BY RANGE (price); -- Создание новой партицированной таблицы
+
+CREATE TABLE orders_cheap_shard
+    PARTITION OF orders_shard    
+    FOR VALUES FROM (MINVALUE) TO (500); -- Создание партиции orders_cheap_shard с price<=499
+
+CREATE TABLE orders_expensive_shard
+    PARTITION OF orders_shard    
+    FOR VALUES FROM (500) TO (MAXVALUE); -- Создание партиции orders_expensive_shard с price>499
+
+INSERT INTO orders_shard SELECT * FROM orders;  -- Копирование данных в новую таблицу
+   
+DROP TABLE orders; -- Удалил старую таблицу
+   
+ALTER TABLE orders_shard RENAME TO orders; -- Переименование новой таблицу в ту, которую удалили
+
+COMMIT; 
 
 ```
+![image](https://github.com/PatKolzin/Administration_course/assets/75835363/cb70c3ba-d33b-4577-871e-9792f7a76260)
+
 
 Можно ли было изначально исключить "ручное" разбиение при проектировании таблицы orders?
 
-Ответ: "ручного" разбиения можно было избежать при проектировании таблицы путём введения секционирования до внесения данных в таблицу.
+Ответ: можно избежать, если заранее ввести секционирование, до внесения данных в таблицу.
 
 ## Задача 4
 
+## Ответ
+
 Используя утилиту `pg_dump` создайте бекап БД `test_database`.
+
+```
+pg_dump test_database > /tmp/test_database.sql 
+```
 
 Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца `title` для таблиц `test_database`?
 
-что бы добавить уникальность значений в секционированнных таблицах необходимо добавить после создания секции соответсвующие констрэйт:
+что бы добавить уникальность значений в секционированнных таблицах необходимо добавить после создания секции соответсвующие ограничения с помощью CONSTRAINT:
 
 ```
-alter table orders_1 add constraint orders_1_title_unique unique (title);
+ALTER TABLE orders_cheap_shard ADD CONSTRAINT unique_title UNIQUE (title);
 
-alter table orders_2 add constraint orders_2_title_unique unique (title);
+ALTER TABLE orders_expensive_shard ADD CONSTRAINT unique_title_2 UNIQUE (title);
+
 ```
 
 ---
