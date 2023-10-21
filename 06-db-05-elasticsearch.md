@@ -252,10 +252,10 @@ curl -X PUT "localhost:9200/test?pretty" -H 'Content-Type: application/json' -d'
 [Создайте `snapshot`](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-take-snapshot.html) 
 состояния кластера `elasticsearch`.
 ```commandline
-curl -X PUT "localhost:9200/_snapshot/netology_backup/my_snapshot23?wait_for_completion=true&pretty"
+curl -X PUT "localhost:9200/_snapshot/netology_backup/my_snapshot?wait_for_completion=true&pretty"
 {
   "snapshot" : {
-    "snapshot" : "my_snapshot23",
+    "snapshot" : "my_snapshot",
     "uuid" : "zFThrYYyTOmhh3_JdBIxUQ",
     "repository" : "netology_backup",
     "version_id" : 8080199,
@@ -322,7 +322,4 @@ curl -X GET localhost:9200/_cat/indices?pretty
 yellow open test-2 9pLrWTrvQYipMB7vUdJ8Dw 1 1 0 0 247b 247b
 green  open test   JGry5uuEScuR1HV051WiWQ 1 0 0 0 247b 247b
 ```
-  health status index  uuid                   pri rep docs.count docs.deleted store.size pri.store.size
-  yellow open   test-2 Aml3V23QRwiJhsILfud56A   1   1          0            0       225b           225b
-  green  open   test   gYEyGCQzRlOqkFF2b8DtDA   1   0          0            0       225b           225b
-  ```
+
