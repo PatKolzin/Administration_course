@@ -31,26 +31,44 @@
 
 ### Ответ
 
-- Составил [Dockerfile](06-db-05-elasticsearch/Dockerfile) и конфигурационные файлы
-  - [elasticsearch.yml](06-db-05-elasticsearch/elasticsearch.yml)
-  - [logging.yml](06-db-05-elasticsearch/logging.yml)
+- Подготовил [Dockerfile](06-db-05-elasticsearch/Dockerfile) и конфигурационные файлы [elasticsearch.yml](06-db-05-elasticsearch/elasticsearch.yml), [logging.yml](06-db-05-elasticsearch/logging.yml)
 - Собрал образ
-    ```bash
+    ```commandline
     vagrant@server1:~/elk$ DOCKER_BUILDKIT=0 docker build -t patkolzin/elasticsearch:8.8.1 . 
     ```
-- Перед запуском образа пришлось выполнить дополнительную настройку хостовой машины иначе была ошибка `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`  
-    ```bash
+- При запуске вылетала ошибка `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`, выполнил команду
+    ```commandline
     sysctl -w vm.max_map_count=262144 
     ```
 - Запустил образ
-    ```bash
+    ```commandline
    vagrant@server1:~/elk$ docker run -d -p 9200:9200 patkolzin/elasticsearch:8.8.1 
     ```
 - Ответ `elasticsearch` на запрос пути `/` в [json](06-db-05-elasticsearch/elasticsearch_response.json) виде
-  - И в картинке
-  ![img.png](06-db-05-elasticsearch/img/img_1.png)
+    ```commandline
+    {
+      "name" : "netology_test",
+      "cluster_name" : "netology",
+      "cluster_uuid" : "bUVxq4WdTryk8XnX60MKGQ",
+      "version" : {
+        "number" : "8.8.1",
+        "build_flavor" : "default",
+        "build_type" : "tar",
+        "build_hash" : "f8edfccba429b6477927a7c1ce1bc6729521305e",
+        "build_date" : "2023-06-05T21:32:25.188464208Z",
+        "build_snapshot" : false,
+        "lucene_version" : "9.6.0",
+        "minimum_wire_compatibility_version" : "7.17.0",
+        "minimum_index_compatibility_version" : "7.0.0"
+      },
+      "tagline" : "You Know, for Search"
+    }
+    ```
+
+    ![image](https://github.com/PatKolzin/Administration_course/assets/75835363/960fe4c6-9ffc-4b99-9a54-89b3289a6063)
+
 - Загрузил образ в свой docker.io репозиторий [ссылка](https://hub.docker.com/repository/docker/patkolzin/elasticsearch/general)
-    ```bash
+    ```commandline
       vagrant@server1:~/elk$ docker push patkolzin/elasticsearch:8.8.1
     ```
 ## Задача 2
