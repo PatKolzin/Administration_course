@@ -44,7 +44,7 @@
     ```commandline
    vagrant@server1:~/elk$ docker run -d -p 9200:9200 patkolzin/elasticsearch:8.8.1 
     ```
-- Ответ `elasticsearch` на запрос пути `/` в [json](06-db-05-elasticsearch/elasticsearch_response.json) виде
+- Ответ `elasticsearch` на запрос пути `/` 
     ```commandline
     {
       "name" : "netology_test",
