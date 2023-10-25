@@ -1,42 +1,39 @@
 # Домашнее задание к занятию «Введение в Terraform»
 
-### Цели задания
-
-1. Установить и настроить Terrafrom.
-2. Научиться использовать готовый код.
-
-------
-
-### Чек-лист готовности к домашнему заданию
-
-1. Скачайте и установите **Terraform** версии =1.5.5 (версия 1.6 может вызывать проблемы с Яндекс провайдером) . Приложите скриншот вывода команды ```terraform --version```.
-2. Скачайте на свой ПК этот git-репозиторий. Исходный код для выполнения задания расположен в директории **01/src**.
-3. Убедитесь, что в вашей ОС установлен docker.
-4. Зарегистрируйте аккаунт на сайте https://hub.docker.com/, выполните команду docker login и введите логин, пароль.
-
-------
-
-### Инструменты и дополнительные материалы, которые пригодятся для выполнения задания
-
-1. Репозиторий с ссылкой на зеркало для установки и настройки Terraform: [ссылка](https://github.com/netology-code/devops-materials).
-2. Установка docker: [ссылка](https://docs.docker.com/engine/install/ubuntu/). 
-------
-### Внимание!! Обязательно предоставляем на проверку получившийся код в виде ссылки на ваш github-репозиторий!
-------
-
 ### Задание 1
 
 1. Перейдите в каталог [**src**](https://github.com/netology-code/ter-homeworks/tree/main/01/src). Скачайте все необходимые зависимости, использованные в проекте. 
 2. Изучите файл **.gitignore**. В каком terraform-файле, согласно этому .gitignore, допустимо сохранить личную, секретную информацию?
+   ```
+    # own secret vars store.
+    personal.auto.tfvars
+   ```
 3. Выполните код проекта. Найдите  в state-файле секретное содержимое созданного ресурса **random_password**, пришлите в качестве ответа конкретный ключ и его значение.
+   ![tfstate password](https://github.com/PatKolzin/Administration_course/assets/75835363/003c2d0c-6a36-474a-a650-d33a41d08028)
+   В ключе result содержится значение пароля
+
 4. Раскомментируйте блок кода, примерно расположенный на строчках 29–42 файла **main.tf**.
 Выполните команду ```terraform validate```. Объясните, в чём заключаются намеренно допущенные ошибки. Исправьте их.
-5. Выполните код. В качестве ответа приложите: исправленный фрагмент кода и вывод команды ```docker ps```.
-6. Замените имя docker-контейнера в блоке кода на ```hello_world```. Не перепутайте имя контейнера и имя образа. Мы всё ещё продолжаем использовать name = "nginx:latest". Выполните команду ```terraform apply -auto-approve```.
+![result - fake 1nginx](https://github.com/PatKolzin/Administration_course/assets/75835363/8bc7b2e2-6795-4efc-a2d4-c08357a5a970)
+ 1 лишняя в названии nginx
+ Неправильные названия переменных - лишнее слово _FAKE и T в верхнем регистре resulT
+
+
+6. Выполните код. В качестве ответа приложите: исправленный фрагмент кода и вывод команды ```docker ps```.
+![docker example](https://github.com/PatKolzin/Administration_course/assets/75835363/dbe550c6-51b0-435f-aa1f-57c2f908b865)
+
+
+7. Замените имя docker-контейнера в блоке кода на ```hello_world```. Не перепутайте имя контейнера и имя образа. Мы всё ещё продолжаем использовать name = "nginx:latest". Выполните команду ```terraform apply -auto-approve```.
 Объясните своими словами, в чём может быть опасность применения ключа  ```-auto-approve```. В качестве ответа дополнительно приложите вывод команды ```docker ps```.
+![docker hello_world](https://github.com/PatKolzin/Administration_course/assets/75835363/dcd16427-b60d-4f7a-b42c-adac58f042bd)
+
+
 8. Уничтожьте созданные ресурсы с помощью **terraform**. Убедитесь, что все ресурсы удалены. Приложите содержимое файла **terraform.tfstate**. 
+![tfstate destroy](https://github.com/PatKolzin/Administration_course/assets/75835363/6051a13b-3f54-4beb-8f5e-d13ee274f9b6)
+
 9. Объясните, почему при этом не был удалён docker-образ **nginx:latest**. Ответ **обязательно** подкрепите строчкой из документации [**terraform провайдера docker**](https://docs.comcloud.xyz/providers/kreuzwerker/docker/latest/docs).  (ищите в классификаторе resource docker_image )
 
+   'Предполагаю что нужно поставить параметр force_remove для удаления образа принудительно - force_remove (Boolean) If true, then the image is removed forcibly when the resource is destroyed.'
 
 ------
 
