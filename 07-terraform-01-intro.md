@@ -18,7 +18,7 @@
    В ключе result, значение '5Gy9UpGWdruGyOxR'
    ```
 
-5. Раскомментируйте блок кода, примерно расположенный на строчках 29–42 файла **main.tf**.
+4. Раскомментируйте блок кода, примерно расположенный на строчках 29–42 файла **main.tf**.
 Выполните команду ```terraform validate```. Объясните, в чём заключаются намеренно допущенные ошибки. Исправьте их.
 ![result - fake 1nginx](https://github.com/PatKolzin/Administration_course/assets/75835363/8bc7b2e2-6795-4efc-a2d4-c08357a5a970)
 
@@ -26,23 +26,26 @@
    1 лишняя в названии nginx и неправильные названия переменных - лишнее слово _FAKE и T в верхнем регистре resulT
    ```
 
-6. Выполните код. В качестве ответа приложите: исправленный фрагмент кода и вывод команды ```docker ps```.
+5. Выполните код. В качестве ответа приложите: исправленный фрагмент кода и вывод команды ```docker ps```.
 ![docker example](https://github.com/PatKolzin/Administration_course/assets/75835363/dbe550c6-51b0-435f-aa1f-57c2f908b865)
 
 
 
-7. Замените имя docker-контейнера в блоке кода на ```hello_world```. Не перепутайте имя контейнера и имя образа. Мы всё ещё продолжаем использовать name = "nginx:latest". Выполните команду ```terraform apply -auto-approve```.
+6. Замените имя docker-контейнера в блоке кода на ```hello_world```. Не перепутайте имя контейнера и имя образа. Мы всё ещё продолжаем использовать name = "nginx:latest". Выполните команду ```terraform apply -auto-approve```.
 Объясните своими словами, в чём может быть опасность применения ключа  ```-auto-approve```. В качестве ответа дополнительно приложите вывод команды ```docker ps```.
 ![docker hello_world](https://github.com/PatKolzin/Administration_course/assets/75835363/dcd16427-b60d-4f7a-b42c-adac58f042bd)
    ```
     Опасность применения команды ```terraform apply -auto-approve``` в том, что она начинает применять изменения без подтверждения, и можно не глядя совершить ошибочные      действия, которые приведут к сбою всей инфраструктуры.
    ```
-8. Уничтожьте созданные ресурсы с помощью **terraform**. Убедитесь, что все ресурсы удалены. Приложите содержимое файла **terraform.tfstate**. 
+7. Уничтожьте созданные ресурсы с помощью **terraform**. Убедитесь, что все ресурсы удалены. Приложите содержимое файла **terraform.tfstate**. 
 ![tfstate destroy](https://github.com/PatKolzin/Administration_course/assets/75835363/6051a13b-3f54-4beb-8f5e-d13ee274f9b6)
 
-9. Объясните, почему при этом не был удалён docker-образ **nginx:latest**. Ответ **обязательно** подкрепите строчкой из документации [**terraform провайдера docker**](https://docs.comcloud.xyz/providers/kreuzwerker/docker/latest/docs).  (ищите в классификаторе resource docker_image )
+8. Объясните, почему при этом не был удалён docker-образ **nginx:latest**. Ответ **обязательно** подкрепите строчкой из документации [**terraform провайдера docker**](https://docs.comcloud.xyz/providers/kreuzwerker/docker/latest/docs).  (ищите в классификаторе resource docker_image )
+   ![image](https://github.com/PatKolzin/Administration_course/assets/75835363/9d4fc4d7-e49c-4ad7-a243-61e87f6786d9)
+
    ```
-   Нужно поставить параметр force_remove для удаления образа принудительно - force_remove (Boolean) If true, then the image is removed forcibly when the resource is destroyed.
+   keep_locally (Boolean) If true, then the Docker image won't be deleted on destroy operation. If this is false, it will delete the image from the docker local storage on destroy operation.
+
    ```
 ------
 
