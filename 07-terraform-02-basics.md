@@ -20,13 +20,53 @@ https://console.cloud.yandex.ru/folders/<ваш cloud_id>/vpc/security-groups.
 2. Переименуйте файл personal.auto.tfvars_example в personal.auto.tfvars. Заполните переменные: идентификаторы облака, токен доступа. Благодаря .gitignore этот файл не попадёт в публичный репозиторий. **Вы можете выбрать иной способ безопасно передать секретные данные в terraform.**
 3. Сгенерируйте или используйте свой текущий ssh-ключ. Запишите его открытую часть в переменную **vms_ssh_root_key**.
 4. Инициализируйте проект, выполните код. Исправьте намеренно допущенные синтаксические ошибки. Ищите внимательно, посимвольно. Ответьте, в чём заключается их суть.
+
+  ![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/324dd5e7-1d98-48c9-85f9-9f2daef9e051)
+
+
+  ```YC предоставляет выбор платформы от v1 до v3. standart-v4 в списке выбора не существует. И была допущена синтаксическая ошибка в значении переменой - "standard" вместо "standart".```
+  ![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/f51db1d5-cebc-4274-95b4-b39c213a7274)
+
+
 5. Ответьте, как в процессе обучения могут пригодиться параметры ```preemptible = true``` и ```core_fraction=5``` в параметрах ВМ. Ответ в документации Yandex Cloud.
+
+***preemptible = true***
+
+```
+Прерываемые виртуальные машины — это виртуальные машины, которые могут быть принудительно остановлены в любой момент.
+Это может произойти в двух случаях:
+
+Если с момента запуска виртуальной машины прошло 24 часа.
+Если возникнет нехватка ресурсов для запуска обычной виртуальной машины в той же зоне доступности.
+Вероятность такого события низкая, но может меняться изо дня в день.
+
+Прерываемые виртуальные машины доступны по более низкой цене в сравнении с обычными, однако не обеспечивают
+отказоустойчивости.
+```
+***core_fraction=5 - это базовый уровень производительности vCPU.*** 
+```
+При создании каждой виртуальной машины необходимо выбирать уровень производительности vCPU. Этот уровень определяет долю вычислительного времени физических ядер, которую гарантирует vCPU.
+
+    Виртуальные машины с уровнем производительности меньше 100% имеют доступ к вычислительной мощности физических ядер как минимум на протяжении указанного процента от единицы времени.
+
+        При уровне производительности 20% ВМ будет иметь доступ к физическим ядрам как минимум 20% времени — 200 миллисекунд в течение каждой секунды. Тактовая частота процессора в это время не ограничивается и соответствует выбранной платформе, например, 2 ГГц для платформы Intel Ice Lake (standard-v3).
+
+    ВМ с уровнем производительности меньше 100% предназначены для запуска приложений, не требующих высокой производительности и не чувствительных к задержкам. Такие машины обойдутся дешевле.
+
+    Виртуальные машины с уровнем производительности 100% имеют непрерывный доступ (100% времени) к вычислительной мощности физических ядер. Такие ВМ предназначены для запуска приложений, требующих высокой производительности на протяжении всего времени работы.
+```
+
 
 В качестве решения приложите:
 
 - скриншот ЛК Yandex Cloud с созданной ВМ;
 - скриншот успешного подключения к консоли ВМ через ssh. К OS ubuntu необходимо подключаться под пользователем ubuntu: "ssh ubuntu@vm_ip_address";
 - ответы на вопросы.
+- 
+### Ответ
+![VM](https://github.com/PatKolzin/Administration_course/assets/75835363/52561fb1-0b2e-4e16-82ff-23d33e6dd3ad)
+![ssh_enter](https://github.com/PatKolzin/Administration_course/assets/75835363/8f73d2a8-e945-4c53-bb42-3da72a21b4e5)
+
 
 
 ### Задание 2
@@ -34,7 +74,15 @@ https://console.cloud.yandex.ru/folders/<ваш cloud_id>/vpc/security-groups.
 1. Изучите файлы проекта.
 2. Замените все хардкод-**значения** для ресурсов **yandex_compute_image** и **yandex_compute_instance** на **отдельные** переменные. К названиям переменных ВМ добавьте в начало префикс **vm_web_** .  Пример: **vm_web_name**.
 2. Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их **default** прежними значениями из main.tf. 
-3. Проверьте terraform plan. Изменений быть не должно. 
+3. Проверьте terraform plan. Изменений быть не должно.
+
+### Ответ
+
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/f22bdd49-264c-4836-8b27-937f15d4cd8d)
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/9ec8529c-b026-48ec-8635-65a8c108fa4b)
+
+![nochanges_2](https://github.com/PatKolzin/Administration_course/assets/75835363/27b33b44-49fe-48f3-a54c-1e8f13742e68)
+
 
 
 ### Задание 3
@@ -42,6 +90,11 @@ https://console.cloud.yandex.ru/folders/<ваш cloud_id>/vpc/security-groups.
 1. Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.
 2. Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: **"netology-develop-platform-db"** ,  cores  = 2, memory = 2, core_fraction = 20. Объявите её переменные с префиксом **vm_db_** в том же файле ('vms_platform.tf').
 3. Примените изменения.
+
+### Ответ
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/5ddd56ea-8f9c-4c25-9ea1-a62f90e066b8)
+![creating_instance_db_3](https://github.com/PatKolzin/Administration_course/assets/75835363/f02f9f6f-c22e-4b7f-ba13-00d78e5c8a35)
+![yc_vm_db_3](https://github.com/PatKolzin/Administration_course/assets/75835363/aa277a08-5675-48e5-afe5-8cf34fe2e1fc)
 
 
 ### Задание 4
@@ -51,12 +104,20 @@ https://console.cloud.yandex.ru/folders/<ваш cloud_id>/vpc/security-groups.
 
 В качестве решения приложите вывод значений ip-адресов команды ```terraform output```.
 
+### Ответ
+
+![output_4](https://github.com/PatKolzin/Administration_course/assets/75835363/cf2300f7-2053-4b5a-8302-fd7f0d58c783)
+
 
 ### Задание 5
 
 1. В файле locals.tf опишите в **одном** local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.
 2. Замените переменные с именами ВМ из файла variables.tf на созданные вами local-переменные.
 3. Примените изменения.
+
+### Ответ
+
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/065c7db6-b3dd-47ee-85b6-62eb9407392f)
 
 
 ### Задание 6
@@ -65,6 +126,12 @@ https://console.cloud.yandex.ru/folders/<ваш cloud_id>/vpc/security-groups.
 2. Также поступите с блоком **metadata {serial-port-enable, ssh-keys}**, эта переменная должна быть общая для всех ваших ВМ.
 3. Найдите и удалите все более не используемые переменные проекта.
 4. Проверьте terraform plan. Изменений быть не должно.
+
+### Ответ
+
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/56ee19a2-faff-4377-9610-a67f2a99cced)
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/5dc62ee3-a840-417d-8421-2bb09092f515)
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/9b20aa09-a418-4ce3-97c4-39e6ad228e0c)
 
 ------
 
@@ -84,5 +151,14 @@ https://console.cloud.yandex.ru/folders/<ваш cloud_id>/vpc/security-groups.
 
 В качестве решения предоставьте необходимые команды и их вывод.
 
+### Ответ
+
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/f50a5db9-8116-4ff6-90fd-cb7f45a345a5)
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/c47552cd-7e1b-47c8-9bfd-c2e0c2296bf5)
+
+
+Команда ```terraform output``` 
+
+![изображение](https://github.com/PatKolzin/Administration_course/assets/75835363/2ab04b61-f7a5-405d-bd02-04a4667ff9c2)
 
 
